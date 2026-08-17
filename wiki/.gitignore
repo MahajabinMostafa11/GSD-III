@@ -1,0 +1,4 @@
+# Wiki sub-repo: separate git repo with its own remote; cloned by
+# init-wiki.sh. Ignored here so the containing repo does not see it as
+# untracked content.
+*.wiki/

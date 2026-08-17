@@ -1,0 +1,47 @@
+{
+  "name": "agent-comms",
+  "version": "0.1.0",
+  "description": "Cross-agent communication primitives: ask.sh (clone-and-invoke), plus an enrollment helper that publishes the derived repo's A2A Card and registers it for federation discovery via the LA3D-LLM-Agents GitHub org.",
+  "status": "experimental",
+
+  "files":   { "source": "code/",  "destination": "scripts/agent-comms/" },
+  "ci":      { "workflow_file": "ci/agent-comms.yml" },
+  "rule":    { "source": "rule.md" },
+
+  "system_deps": [
+    {
+      "name": "gh",
+      "version": ">=2.0",
+      "install": {
+        "ubuntu": "sudo apt install gh",
+        "macos":  "brew install gh",
+        "manual": "https://cli.github.com/"
+      }
+    },
+    {
+      "name": "jq",
+      "version": ">=1.6",
+      "install": {
+        "ubuntu": "sudo apt install jq",
+        "macos":  "brew install jq"
+      }
+    },
+    {
+      "name": "git",
+      "version": ">=2.30",
+      "install": {
+        "ubuntu": "sudo apt install git",
+        "macos":  "(ships with Xcode CLT)"
+      }
+    },
+    {
+      "name": "claude",
+      "version": ">=1.0",
+      "install": {
+        "manual": "https://docs.claude.com/en/docs/agents-and-tools/claude-code (or any LLM CLI; override default via LLM_CLI env var on ask.sh)"
+      }
+    }
+  ],
+
+  "depends_on": ["wiki"]
+}
