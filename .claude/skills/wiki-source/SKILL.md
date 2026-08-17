@@ -24,7 +24,7 @@ This is the `llm-wiki.md`-style Ingest. It is **not** for filing our own experim
 
 ## Procedure
 
-Follow the Ingest procedure in `wiki/{{REPO_NAME}}.wiki/SCHEMA_{{REPO_NAME}}.md`. Pointers:
+Follow the Ingest procedure in `wiki/GSD-III.wiki/SCHEMA_GSD-III.md`. Pointers:
 
 1. Read the source. If long, ask the user which sections matter most for this project.
 2. Discuss the key takeaways with the user briefly before writing pages. Confirm the framing and the cross-link targets.
@@ -32,11 +32,11 @@ Follow the Ingest procedure in `wiki/{{REPO_NAME}}.wiki/SCHEMA_{{REPO_NAME}}.md`
 4. Page body: one-sentence opening line stating what the source is and what it contributes. Then sections for: contribution, methods or arguments relevant here, where it intersects with this project, quotes worth keeping, link to the source. Concise reference style.
 5. Update related entity and concept pages so the new source reinforces or revises what they say. If the source contradicts a wiki claim, update or flag the affected page, do not leave the contradiction.
 6. Fix cross-references in both directions on every affected page (`[[Page]]` in frontmatter, `[Display](Page)` in body).
-7. Update `index_{{REPO_NAME}}.md` under the "Source summaries" category.
-8. Append a `## [YYYY-MM-DD] ingest | Source title` entry to `log_{{REPO_NAME}}.md`. The first bullet is the attribution line `- by: <name> via claude-code`, where `<name>` is the output of `git config user.name` in the wiki repo (read it, do not invent it). Then 2 to 5 bullets describing the ingest. See "Log Entry Attribution" in `SCHEMA_{{REPO_NAME}}.md`.
+7. Update `index_GSD-III.md` under the "Source summaries" category.
+8. Append a `## [YYYY-MM-DD] ingest | Source title` entry to `log_GSD-III.md`. The first bullet is the attribution line `- by: <name> via claude-code`, where `<name>` is the output of `git config user.name` in the wiki repo (read it, do not invent it). Then 2 to 5 bullets describing the ingest. See "Log Entry Attribution" in `SCHEMA_GSD-III.md`.
 9. Optionally rebuild the knowledge graph: `./scripts/kg/build-graph.sh`.
 10. **Run the Verification Gate** at `wiki/agents/verification-gate.md` over every page created or edited. Do not commit until all criteria pass. The gate catches projection-as-fact, missing corpus tags, missing back-references, and missing log/index entries.
-11. Commit in the wiki's own git repo in two steps: first stage and commit the page and index changes by name with a descriptive message, then stage and commit the `log_{{REPO_NAME}}.md` entry on its own. One commit per log entry keeps `git blame` on the log a faithful per-entry record (see "Log Entry Attribution" in SCHEMA). Do not push unless the user requests. **When pushing, follow the procedure at `wiki/agents/wiki-write-protocol.md`** rather than plain `git push`.
+11. Commit in the wiki's own git repo in two steps: first stage and commit the page and index changes by name with a descriptive message, then stage and commit the `log_GSD-III.md` entry on its own. One commit per log entry keeps `git blame` on the log a faithful per-entry record (see "Log Entry Attribution" in SCHEMA). Do not push unless the user requests. **When pushing, follow the procedure at `wiki/agents/wiki-write-protocol.md`** rather than plain `git push`.
 
 A typical source ingest touches 5 to 15 pages.
 
