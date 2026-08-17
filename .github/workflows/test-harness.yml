@@ -105,13 +105,16 @@ jobs:
         # InRelease downloads but the repo never gets trusted, so apt drops
         # the Packages index without a visible error under -qq) while the
         # newer software-properties on jammy/noble handles it fine. A plain
-        # HTTPS fetch of the key works uniformly on all three.
+        # HTTPS fetch of the key works uniformly on all three. Forced -4:
+        # keyserver.ubuntu.com publishes an AAAA record and these containers
+        # have no working IPv6 route, so an unforced curl hangs on the v6
+        # attempt for several minutes before falling back and timing out.
         run: |
           apt-get update -qq
           DEBIAN_FRONTEND=noninteractive apt-get install -y \
             curl git jq ca-certificates gnupg
           install -d -m 0755 /etc/apt/keyrings
-          curl -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xF23C5A6CF475977595C89F51BA6932366A755776' \
+          curl -4 -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xF23C5A6CF475977595C89F51BA6932366A755776' \
             | gpg --dearmor -o /etc/apt/keyrings/deadsnakes.gpg
           . /etc/os-release
           echo "deb [signed-by=/etc/apt/keyrings/deadsnakes.gpg] https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${VERSION_CODENAME} main" \
