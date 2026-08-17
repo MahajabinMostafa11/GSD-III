@@ -23,6 +23,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Pin Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Python deps (venv)
         run: |
           python3 -m venv "${RUNNER_TEMP:-/tmp}/venv"
@@ -61,6 +66,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Pin Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
       - name: Python deps (venv)
         run: |
           python3 -m venv "${RUNNER_TEMP:-/tmp}/venv"
@@ -98,6 +108,11 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Pin Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
 
       - name: Python deps (venv)
         run: |
