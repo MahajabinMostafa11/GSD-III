@@ -21,7 +21,7 @@ FAILED_TESTS=()
 # Category order: faster / structural first, behavioral later.
 # Any category directory under tests/ that's not in this list still runs,
 # alphabetically, after the known ones.
-KNOWN_CATEGORIES=(smoke unit integration e2e regression)
+KNOWN_CATEGORIES=(smoke unit kg integration e2e regression)
 
 # Parse args (initialize arrays explicitly for bash 3.2 + set -u).
 # Uses a while loop so `--category <name>` (space-separated) can consume
@@ -40,7 +40,7 @@ while [[ $# -gt 0 ]]; do
             echo "Usage: $0 [--no-cleanup] [--category <name>] [test-name ...]"
             echo ""
             echo "  --no-cleanup       Keep the sandbox dir after the run for inspection."
-            echo "  --category <name>  Run only tests in this category (smoke/unit/integration/e2e/regression)."
+            echo "  --category <name>  Run only tests in this category (smoke/unit/kg/integration/e2e/regression)."
             echo "                     Can be repeated. --category=<name> is also accepted."
             echo "  <test-name>        Run only this specific test (by directory name). Can be repeated."
             echo ""

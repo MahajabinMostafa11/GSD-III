@@ -114,7 +114,7 @@ scripts/test/
 
 ## Adding a test
 
-1. Pick a category: `smoke` (fast/structural), `unit` (single-script), `integration` (multi-script), `e2e` (full sandbox), `regression` (test for a fixed bug).
+1. Pick a category: `smoke` (fast/structural), `unit` (single-script), `kg` (knowledge-graph build pipeline, needs Python 3.10+/pyshacl), `integration` (multi-script), `e2e` (full sandbox), `regression` (test for a fixed bug).
 2. `mkdir -p tests/<category>/<test-name>`
 3. Write `patch.sh`: applies setup to the sandbox. Should be idempotent. Source `lib/template.sh` etc. if you need helpers (run.sh runs each `patch.sh` in a subshell).
 4. Write `assertions.sh`: uses `assert` / `assert_contains` / `assert_eq` / `assert_ne` / `skip` helpers. Sourced by run.sh (so shares PASS/FAIL/FAILED_TESTS globals).

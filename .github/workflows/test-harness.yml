@@ -5,12 +5,13 @@ on:
     branches: ["**"]
   pull_request:
 
-# Python graph deps (pyyaml/rdflib/pyshacl) go through a venv on every job.
-# pyshacl is not packaged in apt and old ubuntu's pip rejects PEP 668's
-# --break-system-packages, so a venv is the one mechanism that works on the
-# hosted ubuntu/macOS runners and the bare container images alike. The venv
-# lives under RUNNER_TEMP, never the workspace (the smoke tests copy the
-# workspace into their sandbox).
+# Python graph deps (pyyaml/rdflib/pyshacl) go through a venv on the jobs
+# that run the `kg` test category. pyshacl is not packaged in apt and old
+# ubuntu's pip rejects PEP 668's --break-system-packages, so a venv is the
+# one mechanism that works on the hosted ubuntu/macOS runners alike. The
+# venv lives under RUNNER_TEMP, never the workspace (the smoke tests copy
+# the workspace into their sandbox). The git-versions job below runs
+# `smoke`/`unit`/`integration` only (no `kg`), so it skips Python entirely.
 
 jobs:
   test:
@@ -100,48 +101,26 @@ jobs:
           - { image: "ubuntu:24.04", git: "2.43" }
     steps:
       - name: Install system deps (git before checkout so it gets a .git tree)
-        # deadsnakes key added by hand, not via add-apt-repository: on focal
-        # (20.04) add-apt-repository's key-fetch silently no-ops (its
-        # InRelease downloads but the repo never gets trusted, so apt drops
-        # the Packages index without a visible error under -qq) while the
-        # newer software-properties on jammy/noble handles it fine. A plain
-        # HTTPS fetch of the key works uniformly on all three. Forced -4:
-        # keyserver.ubuntu.com publishes an AAAA record and these containers
-        # have no working IPv6 route, so an unforced curl hangs on the v6
-        # attempt for several minutes before falling back and timing out.
         run: |
           apt-get update -qq
           DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            curl git jq ca-certificates gnupg
-          install -d -m 0755 /etc/apt/keyrings
-          curl -4 -fsSL 'https://keyserver.ubuntu.com/pks/lookup?op=get&search=0xF23C5A6CF475977595C89F51BA6932366A755776' \
-            | gpg --dearmor -o /etc/apt/keyrings/deadsnakes.gpg
-          . /etc/os-release
-          echo "deb [signed-by=/etc/apt/keyrings/deadsnakes.gpg] https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu ${VERSION_CODENAME} main" \
-            > /etc/apt/sources.list.d/deadsnakes.list
-          apt-get update -qq
-          DEBIAN_FRONTEND=noninteractive apt-get install -y python3.11 python3.11-venv
+            curl git jq ca-certificates
           git config --global --add safe.directory '*'
 
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Python deps (venv)
-        run: |
-          python3.11 -m venv "${RUNNER_TEMP:-/tmp}/venv"
-          "${RUNNER_TEMP:-/tmp}/venv/bin/pip" install --quiet --upgrade pip
-          "${RUNNER_TEMP:-/tmp}/venv/bin/pip" install --quiet pyyaml rdflib pyshacl
-          echo "${RUNNER_TEMP:-/tmp}/venv/bin" >> "$GITHUB_PATH"
 
       - name: Verify dependencies
         run: |
           bash --version | head -1
           git --version
           jq --version
-          python3 --version
-          python3 -c 'import yaml, rdflib, pyshacl; print("py deps ok")'
 
       - name: Run test harness
+        # No `kg` category: this job exists for git-version compatibility
+        # (init-wiki.sh branch detection), not the KG/pyshacl build
+        # pipeline, so it never needs Python 3.10+. Listed explicitly
+        # rather than relying on `kg` staying absent from a bare run.sh.
         env:
           MVP_TEMPLATE_LOCAL: ${{ github.workspace }}
-        run: ./scripts/test/run.sh
+        run: ./scripts/test/run.sh --category smoke --category integration --category unit
