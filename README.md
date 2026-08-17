@@ -1,6 +1,6 @@
 # GSD-III
 
-One sentence about this disease project
+A knowledge base tracking glycogen storage disease type III (GSD III)- an autosomal recessive glycogen storage disorder caused by deficiency of the glycogen debranching enzyme (AGL). Covers molecular genetics, clinical manifestations (hepatic, cardiac, myopathic), and treatment literature.
 
 <!--
   This README was generated from README.md.template by
