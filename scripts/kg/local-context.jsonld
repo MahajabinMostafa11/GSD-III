@@ -1,0 +1,7 @@
+{
+  "@context": {
+    "MONDO": {"@id": "http://purl.obolibrary.org/obo/MONDO_", "@prefix": true},
+    "mondo": {"@id": "llm-wiki-colab:mondo", "@type": "@id"},
+    "modified": {"@id": "dcterms:modified", "@type": "xsd:date"}
+  }
+}

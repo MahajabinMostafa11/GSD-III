@@ -28,6 +28,7 @@ in Python so the in-process API is available to downstream agent tools.
 """
 
 import argparse
+import json
 import os
 import subprocess
 import sys
@@ -208,6 +209,16 @@ def main():
     ontology_path = fetch_spec("ontology.ttl", refresh=args.refresh_spec)
     shapes_path = fetch_spec("shapes.ttl", refresh=args.refresh_spec)
     context_path = fetch_spec("context.jsonld", refresh=args.refresh_spec)
+
+    local_context_path = SCRIPT_DIR / "local-context.jsonld"
+    if local_context_path.exists():
+        print(f"  Merging {local_context_path} into fetched context", file=sys.stderr)
+        fetched_context = json.loads(context_path.read_text())
+        local_context = json.loads(local_context_path.read_text())
+        fetched_context["@context"].update(local_context["@context"])
+        merged_path = BUILD_DIR / "context-merged.jsonld"
+        merged_path.write_text(json.dumps(fetched_context, indent=2))
+        context_path = merged_path
     print("", file=sys.stderr)
 
     # --- Step 2: extract JSON-LD ---
