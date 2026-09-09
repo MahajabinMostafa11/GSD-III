@@ -1,4 +1,11 @@
 __pycache__
+.DS_Store
+
+# pyvis writes its vendored JS/CSS assets (tom-select, vis-network) into a
+# lib/ dir next to wherever its output HTML is written; when run from repo
+# root this lands at the top level. It's a vendored copy of third-party
+# libs, not project source -- don't track it.
+lib/
 
 # The wiki sub-repo ignore rule lives in wiki/.gitignore (a synced,
 # template-owned file), not here: this root .gitignore is host-owned in
