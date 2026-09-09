@@ -1,0 +1,12 @@
+{
+  "@context": {
+    "ontology_id":     {"@id": "llm-wiki-colab:ontology_id"},
+    "ontology_label":  {"@id": "llm-wiki-colab:ontology_label"},
+    "ontology_xrefs":  {"@id": "llm-wiki-colab:ontology_xrefs"},
+    "evidence":        {"@id": "llm-wiki-colab:evidence"},
+    "lifecycle":       {"@id": "llm-wiki-colab:lifecycle"},
+    "sources":         {"@id": "llm-wiki-colab:sources"},
+    "updated":         {"@id": "dcterms:modified", "@type": "xsd:date"},
+    "ingestion_depth": {"@id": "llm-wiki-colab:ingestion_depth"}
+  }
+}

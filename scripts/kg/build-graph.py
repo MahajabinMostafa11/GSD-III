@@ -204,10 +204,27 @@ def main():
     print("", file=sys.stderr)
 
     # --- Step 1: fetch / refresh spec ---
-    print(f"Step 1: Fetching / refreshing spec from {SPEC_BASE_URL} ...", file=sys.stderr)
     ontology_path = fetch_spec("ontology.ttl", refresh=args.refresh_spec)
     shapes_path = fetch_spec("shapes.ttl", refresh=args.refresh_spec)
     context_path = fetch_spec("context.jsonld", refresh=args.refresh_spec)
+
+    # Merge local field overrides (ontology binding, evidence, lifecycle,
+    # etc. — custom frontmatter fields this project added that the
+    # upstream llm-wiki-colab spec doesn't know about) on top of the
+    # fetched context, so wiki-to-jsonld.py picks them up as predicates
+    # instead of silently dropping them.
+    overrides_path = SCRIPT_DIR / "context-overrides.jsonld"
+    if overrides_path.exists():
+        import json as _json
+        with open(context_path) as f:
+            merged_context = _json.load(f)
+        with open(overrides_path) as f:
+            overrides = _json.load(f)
+        merged_context["@context"].update(overrides["@context"])
+        context_path = BUILD_DIR / "context-merged.jsonld"
+        with open(context_path, "w") as f:
+            _json.dump(merged_context, f, indent=2)
+        print(f"  Merged {overrides_path.name} into context", file=sys.stderr)
     print("", file=sys.stderr)
 
     # --- Step 2: extract JSON-LD ---
