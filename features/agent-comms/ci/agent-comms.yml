@@ -1,0 +1,15 @@
+name: agent-comms
+
+# Placeholder workflow for the agent-comms feature. Real CI lands
+# alongside the implementation. Useful today only as something for
+# install_feature to copy and uninstall_feature to remove.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - name: No-op
+        run: echo "agent-comms workflow placeholder"
