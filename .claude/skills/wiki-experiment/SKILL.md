@@ -18,7 +18,7 @@ Identify the experiment from the conversation or ask the user:
 
 ## Procedure
 
-Follow the Ingest procedure defined in `wiki/{{REPO_NAME}}.wiki/SCHEMA_{{REPO_NAME}}.md`. The steps below are pointers, not a substitute for SCHEMA:
+Follow the Ingest procedure defined in `wiki/GSD-III.wiki/SCHEMA_GSD-III.md`. The steps below are pointers, not a substitute for SCHEMA:
 
 1. Read existing wiki pages for this experiment first. Likely candidates: the benchmark page (`HotpotQA-Benchmark` or `MuSiQue-Benchmark`), the headline results page (`MuSiQue-PoC-Results` or similar), comparison pages (`Drift-Variants-MuSiQue`, `Independent-vs-Chained-Retrieval`), and the concept pages whose claims the result bears on (`Softmax-Normalization`, `Named-Entity-Concept-Extraction`, `Entity-Overlap-Ranking`, `Typed-Predicate-Ontology`, `RAG-Sanity-Check`, etc.). Integrate rather than duplicate.
 2. Create or update an experiment-results page. Frontmatter: `type: synthesis` or `type: entity`; `up:` pointing to the benchmark page; typed edges (`supports:` / `criticizes:` / `extends:`) when the result confirms or refutes a prior claim on another page.
@@ -26,11 +26,11 @@ Follow the Ingest procedure defined in `wiki/{{REPO_NAME}}.wiki/SCHEMA_{{REPO_NA
 4. **Honest reporting.** Bad results, contradicted claims, and worsened metrics get filed truthfully, not polished. Per CLAUDE.md and the global rule: never report accuracy from projections, only from real script outputs.
 5. Update concept pages whose claims this result bears on. If a new result contradicts a wiki claim, update or flag the affected page, do not leave the contradiction.
 6. Fix cross-references in both directions on every affected page (`[[Page]]` in frontmatter, `[Display](Page)` in body).
-7. Update `index_{{REPO_NAME}}.md` with one-line descriptions of new pages in the right category.
-8. Append a `## [YYYY-MM-DD] update | Experiment name` entry to `log_{{REPO_NAME}}.md`. The first bullet is the attribution line `- by: <name> via claude-code`, where `<name>` is the output of `git config user.name` in the wiki repo (read it, do not invent it). Then 2 to 5 bullets describing the run. See "Log Entry Attribution" in `SCHEMA_{{REPO_NAME}}.md`.
+7. Update `index_GSD-III.md` with one-line descriptions of new pages in the right category.
+8. Append a `## [YYYY-MM-DD] update | Experiment name` entry to `log_GSD-III.md`. The first bullet is the attribution line `- by: <name> via claude-code`, where `<name>` is the output of `git config user.name` in the wiki repo (read it, do not invent it). Then 2 to 5 bullets describing the run. See "Log Entry Attribution" in `SCHEMA_GSD-III.md`.
 9. Optionally rebuild the knowledge graph: `./scripts/kg/build-graph.sh`.
 10. **Run the Verification Gate** at `wiki/agents/verification-gate.md` over every page created or edited. Do not commit until all criteria pass. The gate catches projection-as-fact, missing corpus tags on numerical claims, missing back-references, and missing log/index entries — the failure modes the discipline-gates Universal Rationalizations table enumerates.
-11. Commit in the wiki's own git repo in two steps: first stage and commit the page and index changes by name with a descriptive message, then stage and commit the `log_{{REPO_NAME}}.md` entry on its own. One commit per log entry keeps `git blame` on the log a faithful per-entry record (see "Log Entry Attribution" in SCHEMA). Do not push unless the user requests.
+11. Commit in the wiki's own git repo in two steps: first stage and commit the page and index changes by name with a descriptive message, then stage and commit the `log_GSD-III.md` entry on its own. One commit per log entry keeps `git blame` on the log a faithful per-entry record (see "Log Entry Attribution" in SCHEMA). Do not push unless the user requests.
 
 A single experiment write-up typically touches 5 to 15 pages.
 
