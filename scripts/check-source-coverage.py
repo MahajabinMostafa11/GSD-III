@@ -32,26 +32,36 @@ def main():
         papers = json.load(f)
     papers_with_pmid = [p for p in papers if p.get("pubmed_id")]
 
-    existing_sources = set()
+    existing_pmids = set()
+    existing_dois = set()
     for fname in glob.glob(str(Path(args.wiki) / "*.md")):
         with open(fname) as f:
             content = f.read()
         if "type: source-summary" not in content:
             continue
         m = re.search(r'^source:\s*"([^"]+)"', content, re.MULTILINE)
-        if m:
-            existing_sources.add(m.group(1).strip())
+        if not m:
+            continue
+        source_url = m.group(1).strip()
+        pm = re.search(r'pubmed\.ncbi\.nlm\.nih\.gov/(\d+)', source_url)
+        if pm:
+            existing_pmids.add(pm.group(1))
+            continue
+        dm = re.search(r'doi\.org/(.+)$', source_url)
+        if dm:
+            existing_dois.add(dm.group(1).strip("/"))
 
     missing = []
     for p in papers_with_pmid:
-        doi = p.get("doi")
-        doi_url = f"https://doi.org/{doi}" if doi else None
-        if doi_url and doi_url in existing_sources:
+        pmid = str(p.get("pubmed_id"))
+        doi = (p.get("doi") or "").strip("/")
+        if pmid in existing_pmids or (doi and doi in existing_dois):
             continue
         missing.append(p)
 
     print(f"Papers with PMID in corpus: {len(papers_with_pmid)}")
-    print(f"Existing source-summary pages (with source:): {len(existing_sources)}")
+    print(f"Existing source-summary pages (by PMID): {len(existing_pmids)}")
+    print(f"Existing source-summary pages (by DOI, no PMID match): {len(existing_dois)}")
     print(f"Papers NOT YET ingested: {len(missing)}")
 
     with open(args.out, "w", newline="") as f:
