@@ -34,3 +34,6 @@ lib/
 # the tracked .gitignore because leading-slash anchors would resolve to a
 # derived project's own root and start matching its real files.
 missing-source-summaries.csv
+scripts/fulltext/fulltext.env
+scripts/fulltext/bin/
+.fulltext-cache/
