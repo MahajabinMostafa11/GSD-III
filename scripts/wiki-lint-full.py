@@ -63,17 +63,34 @@ for n in untyped: print(' ', n)
 print(f'Total: {len(untyped)}')
 
 # ---- Dead links (body [Display](Page-Name) and frontmatter [[Page-Name]]) ----
+# Link syntax quoted for documentation purposes (inline `code spans` or fenced
+# ```code blocks```) is not a real reference and must not be scanned -- strip
+# both before matching, on a throwaway copy used only for this check.
 print("\n=== Dead links ===")
+fenced_block_re = re.compile(r'```.*?```', re.DOTALL)
+inline_code_re = re.compile(r'`[^`\n]+`')
 link_re = re.compile(r'\[([^\]]*)\]\(([^)#\s]+)(#[^)]*)?\)')
 wikilink_re = re.compile(r'\[\[([^\]|#]+)')
 dead = []
 for name, p in pages.items():
-    for m in link_re.finditer(p['content']):
+    scan_text = fenced_block_re.sub('', p['content'])
+    scan_text = inline_code_re.sub('', scan_text)
+    for m in link_re.finditer(scan_text):
         target = m.group(2)
         if target.startswith('http') or target.startswith('mailto:'):
             continue
         target = target.strip()
-        if target and target not in pages and target not in special_files:
+        if not target:
+            continue
+        # relative filesystem paths (leave the wiki dir) are resolved against
+        # disk, not against the in-wiki page catalog
+        if target.startswith('.') or '/' in target:
+            resolved = os.path.normpath(os.path.join(wiki_dir, target))
+            if os.path.exists(resolved):
+                continue
+            dead.append((name, target, 'body-link'))
+            continue
+        if target not in pages and target not in special_files:
             dead.append((name, target, 'body-link'))
     for m in wikilink_re.finditer(p['fm_raw'] or ''):
         target = m.group(1).strip()
